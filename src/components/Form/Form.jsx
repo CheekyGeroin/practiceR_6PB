@@ -1,9 +1,16 @@
 import { useState } from 'react';
 import { FormContainer, Label, Input, Button } from './Form.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts } from 'redux/selectors/selectors';
+import Notiflix from 'notiflix';
+import { addContact } from 'redux/contact/slice';
 
-export const Form = ({ onSubmit }) => {
+export const Form = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
 
   const handleChange = e => {
     const { name, value } = e.currentTarget;
@@ -25,7 +32,12 @@ export const Form = ({ onSubmit }) => {
 
   const submitForm = e => {
     e.preventDefault();
-    onSubmit(name, number);
+    if (contacts.find(contact => contact.name === name)) {
+      Notiflix.Notify.failure(`${name} is already in your contacts!`);
+      reset();
+      return;
+    }
+    dispatch(addContact(name, number));
     reset();
   };
 
@@ -59,32 +71,3 @@ export const Form = ({ onSubmit }) => {
     </FormContainer>
   );
 };
-// export class Form extends Component {
-//   state = {
-//     name: '',
-//     number: '',
-//   };
-//   handleChange = e => {
-//     const { name, value } = e.currentTarget;
-//     this.setState({
-//       [name]: value,
-//     });
-//   };
-//   submitForm = e => {
-//     e.preventDefault();
-
-//     this.props.onSubmit(this.state);
-
-//     this.reset();
-//   };
-//   reset = () => {
-//     this.setState({
-//       name: ' ',
-//       number: ' ',
-//     });
-//   };
-//   render() {
-//     const { name, number } = this.state;
-//
-//   }
-// }

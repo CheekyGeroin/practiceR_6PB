@@ -1,18 +1,18 @@
-import { Component } from 'react';
+import { useDispatch } from 'react-redux';
 import { Item, Text, Button } from './Contact.styled';
+import { deleteContact } from 'redux/contact/slice';
 
-export class Contact extends Component {
-  render() {
-    const { id, name, number, onDelete } = this.props;
-    return (
-      <Item>
-        <Text>
-          {name}: {number}
-        </Text>
-        <Button type="button" onClick={() => onDelete(id)}>
-          Delete
-        </Button>
-      </Item>
-    );
-  }
-}
+export const Contact = ({ id, name, number }) => {
+  const dispatch = useDispatch();
+
+  return (
+    <Item>
+      <Text>
+        {name}: {number}
+      </Text>
+      <Button type="button" onClick={() => dispatch(deleteContact(id))}>
+        Delete
+      </Button>
+    </Item>
+  );
+};
